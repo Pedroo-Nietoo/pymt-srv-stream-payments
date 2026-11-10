@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: pymt-srv-stream-payments
+  profiles:
+    active: local
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when_authorized
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+app:
+  openapi:
+    title: "Payment Stream Service API"
+    description: "Event-driven payment processing service built for asynchronous transaction streaming and fault-tolerant financial workflows."
+    version: "1.0.0"
+    contact:
+      name: "Pedro Henrique Nieto"
+      email: "pedroonietoo@gmail.com"
+      url: "https://pedro-nieto.dev"
+    license:
+      name: "MIT License"
+      url: "https://opensource.org/licenses/MIT"
+    servers:
+      - url: "http://localhost:${server.port:8080}"
+        description: "Local Environment"
+      - url: "https://api.payments.pedro-nieto.dev"
+        description: "Production Environment"

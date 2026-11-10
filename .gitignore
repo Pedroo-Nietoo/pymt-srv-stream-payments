@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Local Development Environment ###
+.env
+application-LOCAL.yml
+TODO.md
