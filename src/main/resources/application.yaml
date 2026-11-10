@@ -1,0 +1,3 @@
+spring:
+  application:
+    name: pymt-srv-stream-payments
