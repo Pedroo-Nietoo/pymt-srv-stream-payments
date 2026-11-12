@@ -4,20 +4,19 @@ spring:
   profiles:
     active: local
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics,prometheus
-  endpoint:
-    health:
-      show-details: when_authorized
-
 springdoc:
   api-docs:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
+info:
+  app:
+    name: "pymt-srv-stream-payments"
+    description: "Microsserviço de ingestão de pagamentos (Event-Driven)"
+    version: "1.0.0"
+  team:
+    name: "Squad Pagamentos"
+    contact: "pedroonietoo@gmail.com"
 
 app:
   openapi:
@@ -27,12 +26,12 @@ app:
     contact:
       name: "Pedro Henrique Nieto"
       email: "pedroonietoo@gmail.com"
-      url: "https://pedro-nieto.dev"
+      url: "https://pedronieto.dev"
     license:
       name: "MIT License"
       url: "https://opensource.org/licenses/MIT"
     servers:
       - url: "http://localhost:${server.port:8080}"
         description: "Local Environment"
-      - url: "https://api.payments.pedro-nieto.dev"
+      - url: "https://api.payments.pedronieto.dev"
         description: "Production Environment"
