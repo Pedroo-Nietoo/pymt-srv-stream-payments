@@ -1,4 +1,7 @@
 package com.pedroonietoo.pymt_srv_stream_payments.infrastructure.adapters.out.persistence.outbox;
 
 public enum OutboxStatus {
+    PENDING,
+    PROCESSED,
+    FAILED
 }
