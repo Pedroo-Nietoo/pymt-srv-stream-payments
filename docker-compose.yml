@@ -20,21 +20,6 @@ services:
     networks:
       - payments-net
 
-  redis:
-    image: redis:7-alpine
-    container_name: payments-redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - payments-net
-
   kafka:
     image: confluentinc/cp-kafka:7.6.0
     container_name: payments-kafka
@@ -79,7 +64,6 @@ services:
 
 volumes:
   postgres_data:
-  redis_data:
 
 networks:
   payments-net:
