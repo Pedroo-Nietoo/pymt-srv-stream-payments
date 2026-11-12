@@ -1,4 +1,4 @@
-package com.pedroonietoo.pymt_srv_stream_payments.domain.exception;
+package com.pedroonietoo.pymt_srv_stream_payments.domain.exceptions;
 
 import java.util.UUID;
 

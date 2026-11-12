@@ -63,6 +63,12 @@ public class Payment {
         this.updatedAt = Instant.now();
     }
 
+    public void cancel() {
+        validateTransition(PaymentStatus.CANCELLED);
+        this.status = PaymentStatus.CANCELLED;
+        this.updatedAt = Instant.now();
+    }
+
     public void fail(String reason) {
         validateTransition(PaymentStatus.FAILED);
         this.status = PaymentStatus.FAILED;
