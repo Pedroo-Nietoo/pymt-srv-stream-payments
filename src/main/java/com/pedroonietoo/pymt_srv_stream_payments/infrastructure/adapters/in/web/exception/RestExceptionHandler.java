@@ -1,5 +1,6 @@
 package com.pedroonietoo.pymt_srv_stream_payments.infrastructure.adapters.in.web.exception;
 
+import com.pedroonietoo.pymt_srv_stream_payments.domain.exceptions.PaymentNotFoundException;
 import com.pedroonietoo.pymt_srv_stream_payments.infrastructure.adapters.in.web.exception.response.ApiErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,7 +87,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         apiError.addSubError("MALFORMED_JSON", "Verify request body syntax and valid enum values");
         return buildResponseEntity(apiError, ex);
     }
-    // 5. Unsupported media type (Content-Type)
+
     @Override
     protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(
             HttpMediaTypeNotSupportedException ex,
@@ -155,6 +156,24 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleGenericException(Exception ex) {
         var apiError = new ApiErrorResponse(INTERNAL_SERVER_ERROR, "An unexpected internal server error occurred", ex);
         apiError.addSubError("INTERNAL_ERROR", "Please contact support or try again later");
+        return buildResponseEntity(apiError, ex);
+    }
+
+    @ExceptionHandler(PaymentNotFoundException.class)
+    public ResponseEntity<Object> handlePaymentNotFoundException(PaymentNotFoundException ex) {
+        var apiError = new ApiErrorResponse(NOT_FOUND, ex.getMessage(), ex);
+        apiError.addSubError("PAYMENT_NOT_FOUND", "The requested payment could not be found");
+        return buildResponseEntity(apiError, ex);
+    }
+
+    @ExceptionHandler(io.github.resilience4j.ratelimiter.RequestNotPermitted.class)
+    public ResponseEntity<Object> handleRateLimit(io.github.resilience4j.ratelimiter.RequestNotPermitted ex) {
+        var apiError = new ApiErrorResponse(
+                org.springframework.http.HttpStatus.TOO_MANY_REQUESTS,
+                "Rate limit exceeded. Too many requests, please try again later.",
+                ex
+        );
+        apiError.addSubError("RATE_LIMIT_EXCEEDED", "You have reached the maximum allowed request rate.");
         return buildResponseEntity(apiError, ex);
     }
 

@@ -6,6 +6,7 @@ import com.pedroonietoo.pymt_srv_stream_payments.domain.models.Payment;
 import com.pedroonietoo.pymt_srv_stream_payments.infrastructure.adapters.in.web.doc.CreatePaymentDoc;
 import com.pedroonietoo.pymt_srv_stream_payments.infrastructure.adapters.in.web.dto.CreatePaymentRequest;
 import com.pedroonietoo.pymt_srv_stream_payments.infrastructure.adapters.in.web.dto.PaymentResponse;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,7 @@ public class CreatePaymentController implements CreatePaymentDoc {
 
     @Override
     @PostMapping
+    @RateLimiter(name = "payment-api")
     public ResponseEntity<PaymentResponse> create(
             @RequestHeader("Idempotency-Key") String idempotencyKey,
             @RequestHeader("X-Customer-Id") String customerId,
