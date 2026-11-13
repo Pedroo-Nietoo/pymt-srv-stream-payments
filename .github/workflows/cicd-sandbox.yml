@@ -100,9 +100,7 @@ jobs:
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: ${{ env.JAVA_DISTRIBUTION }}
-
-      - name: Compile classes for SonarQube mapping
-        run: ./mvnw compile -B
+          cache: maven
 
       - name: Download coverage
         uses: actions/download-artifact@v4
@@ -110,29 +108,19 @@ jobs:
           name: coverage
           path: target/site/jacoco
 
-      - name: Run SonarQube scan
-        uses: SonarSource/sonarqube-scan-action@v6
+      - name: Run SonarQube analysis via Maven
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
-        with:
-          args: >-
-            -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }}
-            -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }}
-            -Dsonar.sources=src/main/java
-            -Dsonar.tests=src/test/java
-            -Dsonar.java.binaries=target/classes
-            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
-            -Dsonar.exclusions=**/generated/**,**/*Config.java,**/*Application.java
-
-      - name: Check SonarQube Quality Gate
-        uses: SonarSource/sonarqube-quality-gate-action@master
-        timeout-minutes: 5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
-        with:
-          scanResultTaskPath: .scannerwork/report-task.txt
+        run: |
+          ./mvnw sonar:sonar \
+            -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }} \
+            -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }} \
+            -Dsonar.host.url=${{ vars.SONAR_HOST_URL }} \
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
+            -Dsonar.exclusions=**/generated/**,**/*Config.java,**/*Application.java \
+            -B
 
       - name: SonarQube summary
         if: success()
