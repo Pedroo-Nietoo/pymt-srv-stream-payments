@@ -102,7 +102,7 @@ jobs:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
 
       - name: Compile classes for SonarQube mapping
-        run: ./mvnw clean compile -B
+        run: ./mvnw compile -B
 
       - name: Download coverage
         uses: actions/download-artifact@v4
@@ -125,12 +125,14 @@ jobs:
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
             -Dsonar.exclusions=**/generated/**,**/*Config.java,**/*Application.java
 
-      - name: Check SonarQube quality gate
+      - name: Check SonarQube Quality Gate
         uses: SonarSource/sonarqube-quality-gate-action@master
         timeout-minutes: 5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+        with:
+          scanResultTaskPath: .scannerwork/report-task.txt
 
       - name: SonarQube summary
         if: success()
