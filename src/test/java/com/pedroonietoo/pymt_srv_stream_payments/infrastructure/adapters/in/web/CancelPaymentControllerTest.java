@@ -1,0 +1,4 @@
+package com.pedroonietoo.pymt_srv_stream_payments.infrastructure.adapters.in.web;
+
+public class CancelPaymentControllerTest {
+}
