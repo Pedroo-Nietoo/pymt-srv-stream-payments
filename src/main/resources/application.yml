@@ -3,6 +3,9 @@ spring:
     name: pymt-srv-stream-payments
   profiles:
     active: local
+  threads:
+    virtual:
+      enabled: true
 
 springdoc:
   api-docs:
