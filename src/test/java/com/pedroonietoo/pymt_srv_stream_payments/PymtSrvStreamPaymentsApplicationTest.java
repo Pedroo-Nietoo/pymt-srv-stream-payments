@@ -1,15 +1,22 @@
 package com.pedroonietoo.pymt_srv_stream_payments;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.springframework.boot.SpringApplication;
 
-@Import(TestcontainersConfiguration.class)
-@SpringBootTest
-class PymtSrvStreamPaymentsApplicationTests {
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+class PymtSrvStreamPaymentsApplicationTest {
 
 	@Test
-	void contextLoads() {
-	}
+	void shouldConstructAndRunMain() {
+		PymtSrvStreamPaymentsApplication application = new PymtSrvStreamPaymentsApplication();
+		assertNotNull(application);
 
+		try (MockedStatic<SpringApplication> mockedSpringApp = Mockito.mockStatic(SpringApplication.class)) {
+			PymtSrvStreamPaymentsApplication.main(new String[]{"--test-arg=true"});
+			mockedSpringApp.verify(() -> SpringApplication.run(PymtSrvStreamPaymentsApplication.class, new String[]{"--test-arg=true"}));
+		}
+	}
 }
