@@ -112,15 +112,6 @@ jobs:
 
       - name: Run SonarQube scan
         uses: SonarSource/sonarqube-scan-action@v6
-
-      - name: Download coverage
-        uses: actions/download-artifact@v4
-        with:
-          name: coverage
-          path: target/site/jacoco
-
-      - name: Run SonarQube scan
-        uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
