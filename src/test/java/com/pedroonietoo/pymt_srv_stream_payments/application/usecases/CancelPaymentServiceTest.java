@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -55,5 +56,17 @@ class CancelPaymentServiceTest {
         when(paymentRepositoryPort.findById(paymentId)).thenReturn(Optional.empty());
 
         assertThrows(PaymentNotFoundException.class, () -> cancelPaymentService.execute(paymentId));
+    }
+
+    @Test
+    void shouldThrowRuntimeExceptionWhenSerializationFails() throws Exception {
+        UUID paymentId = UUID.randomUUID();
+        Payment payment = org.mockito.Mockito.mock(Payment.class);
+        when(paymentRepositoryPort.findById(paymentId)).thenReturn(Optional.of(payment));
+        when(objectMapper.writeValueAsString(payment))
+                .thenThrow(org.mockito.Mockito.mock(com.fasterxml.jackson.core.JsonProcessingException.class));
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> cancelPaymentService.execute(paymentId));
+        assertEquals("Error serializing cancelled payment event", exception.getMessage());
     }
 }
